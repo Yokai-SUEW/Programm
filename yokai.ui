@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dialog</class>
+ <widget class="QDialog" name="dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>426</width>
+    <height>319</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Yokai - Serverüberwachung</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #201f1f;</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>20</y>
+     <width>251</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: #201f1f;
+color: rgb(186, 35, 35);
+border: 2px solid #ba2323;
+border-radius: 10px;
+font-family: bahnschrift;
+padding-left: 10%;
+padding-right: 10%;
+
+</string>
+   </property>
+   <property name="text">
+    <string>Yokai - Serverüberwachung</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>280</y>
+     <width>99</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #ba2323;
+border: 2px solid #ba2323;
+border-radius: 10px;
+font-family: Arial;</string>
+   </property>
+   <property name="text">
+    <string>Exit!</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
