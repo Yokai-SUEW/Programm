@@ -24,7 +24,7 @@ class Ui_dialog(object):
 "padding-right: 20px;\n"
 "padding-left: 20px;\n"
 "")
-        self.label.setObjectName("label")
+   
         self.pushButton = QtWidgets.QPushButton(dialog)
         self.pushButton.setGeometry(QtCore.QRect(470, 500, 71, 41))
         self.pushButton.setStyleSheet("border: 2px solid white;\n"

@@ -1,5 +1,22 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+import mysql.connector
+from mysql.connector import Error
 
+#MySQL - Connector
+mydb = mysql.connector.connect(
+    host="yokai.ddns.net",
+    user="root",
+    passwd="292726242528",
+    database="yokai"
+    )
+
+
+mycursor = mydb.cursor()
+mycursor.execute("SELECT * FROM sensor_status")
+myresult = mycursor.fetchall()
+
+for row in myresult:
+    print(row)
 
 class Ui_dialog(object):
     def setupUi(self, dialog):
@@ -19,6 +36,7 @@ class Ui_dialog(object):
 "border-radius: 25px;\n"
 "font-family: Arial;\n"
 "color: white;"
+"font-size: 25px;"
 "\n"
 "}")
 
