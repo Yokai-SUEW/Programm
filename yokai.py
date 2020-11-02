@@ -18,6 +18,7 @@ myresult = mycursor.fetchall()
 for row in myresult:
     print(row)
 
+
 class Ui_dialog(object):
     def setupUi(self, dialog):
         dialog.setObjectName("dialog")
