@@ -6,4 +6,11 @@ import sys
 def Fenster():
     app = QApplication(sys.argv)
     win = QMainWindow()
-    win.setGeometry()
+    win.setGeometry(550, 350, 720, 480)
+    win.setWindowTitle("Yokai - Serverüberwachung")
+
+
+    win.show()
+    sys.exit(app.exec_())
+
+Fenster()
