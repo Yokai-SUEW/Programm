@@ -25,20 +25,26 @@ class Ui_dialog(object):
         dialog.setStyleSheet("background-color: #201f1f;")
         self.label = QtWidgets.QLabel(dialog)
         self.label.setGeometry(QtCore.QRect(300, 0, 200, 100))
-        self.label.setStyleSheet("color: white;\n"
-"font-family: bahnschrift;\n"
-"font-size: 60px;\n"
-"")
+        self.label.setStyleSheet(
+            "color: white;\n"
+            "font-family: bahnschrift;\n"
+            "font-size: 60px;\n"
+            ""
+            )
+
+
         self.label.setObjectName("label")
         self.pushButtonE = QtWidgets.QPushButton(dialog)
         self.pushButtonE.setGeometry(QtCore.QRect(345, 410, 50, 50))
-        self.pushButtonE.setStyleSheet("border: 2px solid white;\n"
-"border-radius: 25px;\n"
-"font-family: Arial;\n"
-"color: white;"
-"font-size: 25px;"
-"\n"
-"}")
+        self.pushButtonE.setStyleSheet(
+            "border: 2px solid white;\n"
+            "border-radius: 25px;\n"
+            "font-family: Arial;\n"
+            "color: white;"
+            "font-size: 25px;"
+            "\n"
+            "}"
+            )
 
         def abbrechen():
             sys.exit()
