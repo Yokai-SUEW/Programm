@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import mysql.connector
 from mysql.connector import Error
 
+################################################################
 #MySQL - Connector
 mydb = mysql.connector.connect(
     host="yokai.ddns.net",
@@ -18,6 +19,7 @@ myresult = mycursor.fetchall()
 for row in myresult:
     print(row)
 
+###############################################################
 
 class Ui_dialog(object):
     def setupUi(self, dialog):
