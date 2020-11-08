@@ -1,9 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem
 import mysql.connector
 from mysql.connector import Error
 
 ################################################################
 #MySQL - Connector
+
 mydb = mysql.connector.connect(
     host="yokai.ddns.net",
     user="root",
@@ -20,6 +22,12 @@ for row in myresult:
     print(row)
 
 ###############################################################
+#Tabelle
+
+
+
+
+
 
 class Ui_dialog(object):
     def setupUi(self, dialog):
@@ -49,11 +57,16 @@ class Ui_dialog(object):
             "}"
             )
 
+
+######################################################################
+#Funktionen
+
         def abbrechen():
             sys.exit()
 
+
+
         self.pushButtonE.clicked.connect(abbrechen)
-        
 
         self.pushButtonE.setObjectName("pushButton")
 
