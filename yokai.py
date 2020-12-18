@@ -25,7 +25,7 @@ for row in myresult:
 #StyleSheet
 
 StyleSheet = '''
-QPushButton#X {
+QPushButton {
     background-color: #201f1f;
     border: 2px solid white;
     border-radius: 25px;
@@ -33,7 +33,8 @@ QPushButton#X {
     color: white;
     font-size: 25px;
 }
-QPushButton#X:hover {
+
+QPushButton::hover {
     background-color: #201f1f;
     border: 2px solid #201f1f;
     border-radius: 25px;
@@ -41,7 +42,8 @@ QPushButton#X:hover {
     color: grey;
     font-size: 30px;
 }
-QPushButton#X:pressed {
+
+QPushButton::pressed {
     background-color: #201f1f;
     border: 2px solid #201f1f;
     color: #201f1f;
@@ -72,7 +74,8 @@ class UIWindow(object):
         )
 
         self.label = QtWidgets.QLabel(MainWindow)
-        self.label.setGeometry(QtCore.QRect(330, 0, 200, 80))
+        self.label.setAlignment(QtCore.Qt.AlignCenter) 
+        self.label.setGeometry(QtCore.QRect(10, 0, 780, 80))
         self.label.setStyleSheet(
             "font-family: bahnschrift;\n"
             "font-size: 60px;\n"
@@ -83,14 +86,13 @@ class UIWindow(object):
 #####################################################################
 #Buttons
 
-        layoutV = QtWidgets.QLabel(value)
         self.label.setObjectName("X")
         self.pushButtonE = QtWidgets.QPushButton(MainWindow)
         self.pushButtonE.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.pushButtonE.setGeometry(QtCore.QRect(375, 410, 50, 50))
         self.pushButtonE.setStyleSheet(StyleSheet)
     
-######################################################################
+#####################################################################
 #Funktionen
 
         def abbrechen():
@@ -109,7 +111,7 @@ class UIWindow(object):
         self.pushButtonE.setText(_translate("MainWindow", "X"))
 
 
-        
+
 
 if __name__ == "__main__":
     import sys
