@@ -1,11 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QApplication , QMainWindow , QPushButton , QWidget
+from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QApplication , QMainWindow , QPushButton , QWidget, QFrame, QHBoxLayout
 import mysql.connector
 from mysql.connector import Error
 
 ################################################################
 #MySQL - Connector
-
+'''
 mydb = mysql.connector.connect(
     host="192.168.0.45",
     user="halil",
@@ -16,7 +16,7 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 mycursor.execute("SELECT * FROM sensor_status")
 myresult = mycursor.fetchall()
-
+'''
 '''
 for row in myresult:
     print(row)
@@ -26,21 +26,22 @@ for row in myresult:
 
 StyleSheet = '''
 QPushButton {
-    background-color: #201f1f;
-    border: 2px solid white;
+    background-color: grey;
+    border: 2px solid grey;
     border-radius: 25px;
     font-family: Arial;
     color: white;
     font-size: 25px;
+    text-align: center;
 }
 
 QPushButton::hover {
-    background-color: #201f1f;
-    border: 2px solid #201f1f;
-    border-radius: 25px;
+    background-color: darkred;
+    border: 2px solid darkred;
+    border-radius: 12px;
     font-family: Arial;
-    color: grey;
-    font-size: 30px;
+    color: white;
+    font-size: 27px;
 }
 
 QPushButton::pressed {
@@ -48,7 +49,33 @@ QPushButton::pressed {
     border: 2px solid #201f1f;
     color: #201f1f;
 }
+
 '''
+
+StyleSheetTable = '''
+QTableWidget {
+        color: white;
+        background-color: grey;
+        width: 70%;
+        height: 60%;
+        font-family: bahnschrift;
+        font-size: 20px;
+        text-align: center;
+        border-collapse: collapse;
+}
+
+::section {
+    Background-color: green;
+    color: white;
+}
+'''
+
+StyleSheetTable2 = """
+::section {
+    background-color: red;
+    color: white;
+}
+"""
 
 ##############################################################
 #Bildschirm
@@ -63,15 +90,10 @@ class UIWindow(object):
         self.tableWidget = QTableWidget(MainWindow)
         self.tableWidget.setRowCount(8)
         self.tableWidget.setColumnCount(4)
-        self.tableWidget.setGeometry(QtCore.QRect(30,90,500,300))
-        self.tableWidget.setStyleSheet(
-            "color: white;\n"
-            "background-color: black;\n"
-            "width: 70%;\n"
-            "height: 60%;\n"
-            "font-family: bahnschrift;\n"
-            "font-size: 20px;\n"
-        )
+        self.tableWidget.setGeometry(QtCore.QRect(175,95,457,291))
+        self.tableWidget.setStyleSheet(StyleSheetTable)
+        self.tableWidget.horizontalHeader().setStyleSheet(StyleSheetTable)
+        self.tableWidget.verticalHeader().setStyleSheet(StyleSheetTable2)
 
         self.label = QtWidgets.QLabel(MainWindow)
         self.label.setAlignment(QtCore.Qt.AlignCenter) 
@@ -88,6 +110,8 @@ class UIWindow(object):
 
         self.label.setObjectName("X")
         self.pushButtonE = QtWidgets.QPushButton(MainWindow)
+        self.pushButtonE.setMouseTracking(False)
+        self.pushButtonE.setAutoFillBackground(False)
         self.pushButtonE.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.pushButtonE.setGeometry(QtCore.QRect(375, 410, 50, 50))
         self.pushButtonE.setStyleSheet(StyleSheet)
