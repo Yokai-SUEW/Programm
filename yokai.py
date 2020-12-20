@@ -20,10 +20,9 @@ myresult = mycursor.fetchall()
 self.tableWidget.setRowCount(0)
 for row_number, row_data in enumerate(myresult):
     self.tableWidget.insertRow(row_number)
-    for colum_number, data in enumerate(row_data):
+    for column_number, data in enumerate(row_data):
         self.tableWidget.setItem(row_number, colum_number, QtWidgets.QTableWidgetItem(str(data)))
 
-mydb.close()
 
 #############################################################
 #StyleSheet
