@@ -1,3 +1,4 @@
+from PyQt5.QtSql import QSqlDatabase, QSqlQueryModel, QSqlQuery
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QApplication , QMainWindow , QPushButton , QWidget, QFrame, QHBoxLayout
 import mysql.connector
@@ -6,7 +7,6 @@ from mysql.connector import Error
 #############################################################
 #MySQL - Connector
 
-
 mydb = mysql.connector.connect(
     host="192.168.0.45",
     user="halil",
@@ -14,17 +14,16 @@ mydb = mysql.connector.connect(
     database="yokai",
     )
 
+"""
 class Ui_MainWindow(object):
     def loadData(self):
-        mycursor = mydb.cursor()
-        mycursor.execute("SELECT * FROM sensor_status")
-        myresult = mycursor.fetchall()
+
         self.tableWidget.setRowCount(0)
         for row_number, row_data in enumerate(myresult):
             self.tableWidget.insertRow(row_number)
             for column_number, data in enumerate(row_data):
                 self.tableWidget.setItem(row_number, colum_number, QtWidgets.QTableWidgetItem(str(data)))
-
+"""
 
 #############################################################
 #StyleSheet
@@ -71,15 +70,11 @@ QTableWidget {
 ::section {
     Background-color: green;
     color: white;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
 }
 '''
-
-StyleSheetTable2 = """
-::section {
-    background-color: red;
-    color: white;
-}
-"""
 
 ##############################################################
 #Bildschirm
@@ -90,9 +85,7 @@ class UIWindow(object):
         MainWindow.setFixedSize(800, 480)
         MainWindow.setStyleSheet("background-color: #201f1f;")
         MainWindow.setWindowTitle("Yokai-Serverüberwachung")
-        MainWindow.setWindowIcon(QtGui.QIcon('../favicon.png'))
         self.tableWidget = QTableWidget(MainWindow)
-        self.tableWidget.setRowCount(8)
         self.tableWidget.setColumnCount(4)
         self.tableWidget.setHorizontalHeaderItem(0, QTableWidgetItem("ID"))
         self.tableWidget.setHorizontalHeaderItem(1, QTableWidgetItem("Temperatur"))
@@ -101,7 +94,6 @@ class UIWindow(object):
         self.tableWidget.setGeometry(QtCore.QRect(30,95,740,291))
         self.tableWidget.setStyleSheet(StyleSheetTable)
         self.tableWidget.horizontalHeader().setStyleSheet(StyleSheetTable)
-        self.tableWidget.verticalHeader().setStyleSheet(StyleSheetTable2)
         header = self.tableWidget.horizontalHeader()
         header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
@@ -110,10 +102,20 @@ class UIWindow(object):
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
         header.setSectionsClickable(False)
 
+        mycursor = mydb.cursor()
+        mycursor.execute("SELECT * FROM sensor_status ORDER BY ID DESC, Temperatur DESC, Luftfeuchtigkeit DESC, Datum DESC")
+        myresult = mycursor.fetchall()
+        self.tableWidget.setRowCount(len(myresult))
+        self.tableWidget.setColumnCount(4)
 
-
-        header2 = self.tableWidget.verticalHeader()
-        header2.setSectionsClickable(False)
+        row = 0
+        while True:
+            sqlRow = mycursor.fetchone()
+            if sqlRow == None:
+                break
+            for col in range(0, 8):
+                self.tableWidget.setItem(row, col, QtGui.QTableWidgetItem(sqlRow[col]))
+            row += 1
 
         self.label = QtWidgets.QLabel(MainWindow)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
