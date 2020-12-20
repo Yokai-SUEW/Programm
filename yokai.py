@@ -14,14 +14,16 @@ mydb = mysql.connector.connect(
     database="yokai",
     )
 
-mycursor = mydb.cursor()
-mycursor.execute("SELECT * FROM sensor_status")
-myresult = mycursor.fetchall()
-self.tableWidget.setRowCount(0)
-for row_number, row_data in enumerate(myresult):
-    self.tableWidget.insertRow(row_number)
-    for column_number, data in enumerate(row_data):
-        self.tableWidget.setItem(row_number, colum_number, QtWidgets.QTableWidgetItem(str(data)))
+class Ui_MainWindow(object):
+    def loadData(self):
+        mycursor = mydb.cursor()
+        mycursor.execute("SELECT * FROM sensor_status")
+        myresult = mycursor.fetchall()
+        self.tableWidget.setRowCount(0)
+        for row_number, row_data in enumerate(myresult):
+            self.tableWidget.insertRow(row_number)
+            for column_number, data in enumerate(row_data):
+                self.tableWidget.setItem(row_number, colum_number, QtWidgets.QTableWidgetItem(str(data)))
 
 
 #############################################################
@@ -92,20 +94,35 @@ class UIWindow(object):
         self.tableWidget = QTableWidget(MainWindow)
         self.tableWidget.setRowCount(8)
         self.tableWidget.setColumnCount(4)
-        self.tableWidget.setGeometry(QtCore.QRect(175,95,457,291))
+        self.tableWidget.setHorizontalHeaderItem(0, QTableWidgetItem("ID"))
+        self.tableWidget.setHorizontalHeaderItem(1, QTableWidgetItem("Temperatur"))
+        self.tableWidget.setHorizontalHeaderItem(2, QTableWidgetItem("Luftfeuchtigkeit"))
+        self.tableWidget.setHorizontalHeaderItem(3, QTableWidgetItem("Datum & Uhrzeit"))
+        self.tableWidget.setGeometry(QtCore.QRect(30,95,740,291))
         self.tableWidget.setStyleSheet(StyleSheetTable)
         self.tableWidget.horizontalHeader().setStyleSheet(StyleSheetTable)
         self.tableWidget.verticalHeader().setStyleSheet(StyleSheetTable2)
+        header = self.tableWidget.horizontalHeader()
+        header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
+        header.setSectionsClickable(False)
+
+
+
+        header2 = self.tableWidget.verticalHeader()
+        header2.setSectionsClickable(False)
 
         self.label = QtWidgets.QLabel(MainWindow)
-        self.label.setAlignment(QtCore.Qt.AlignCenter) 
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setGeometry(QtCore.QRect(10, 0, 780, 80))
         self.label.setStyleSheet(
         "font-family: bahnschrift;\n"
         "font-size: 60px;\n"
         "color: white;\n"
         )
-
 
 #####################################################################
 #Buttons
