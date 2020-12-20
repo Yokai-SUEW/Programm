@@ -3,9 +3,10 @@ from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QApplication , QMain
 import mysql.connector
 from mysql.connector import Error
 
-################################################################
+#############################################################
 #MySQL - Connector
-'''
+
+
 mydb = mysql.connector.connect(
     host="192.168.0.45",
     user="halil",
@@ -16,11 +17,14 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 mycursor.execute("SELECT * FROM sensor_status")
 myresult = mycursor.fetchall()
-'''
-'''
-for row in myresult:
-    print(row)
-'''
+self.tableWidget.setRowCount(0)
+for row_number, row_data in enumerate(myresult):
+    self.tableWidget.insertRow(row_number)
+    for colum_number, data in enumerate(row_data):
+        self.tableWidget.setItem(row_number, colum_number, QtWidgets.QTableWidgetItem(str(data)))
+
+mydb.close()
+
 #############################################################
 #StyleSheet
 
@@ -46,16 +50,15 @@ QPushButton::hover {
 
 QPushButton::pressed {
     background-color: #201f1f;
-    border: 2px solid #201f1f;
-    color: #201f1f;
+    border: 2px solid darkred;
+    color: white;
 }
-
 '''
 
 StyleSheetTable = '''
 QTableWidget {
         color: white;
-        background-color: grey;
+        background-color: #201f1f;
         width: 70%;
         height: 60%;
         font-family: bahnschrift;
@@ -99,9 +102,9 @@ class UIWindow(object):
         self.label.setAlignment(QtCore.Qt.AlignCenter) 
         self.label.setGeometry(QtCore.QRect(10, 0, 780, 80))
         self.label.setStyleSheet(
-            "font-family: bahnschrift;\n"
-            "font-size: 60px;\n"
-            "color: white;\n"
+        "font-family: bahnschrift;\n"
+        "font-size: 60px;\n"
+        "color: white;\n"
         )
 
 
