@@ -14,16 +14,14 @@ mydb = mysql.connector.connect(
     database="yokai",
     )
 
-"""
+
 class Ui_MainWindow(object):
     def loadData(self):
-
         self.tableWidget.setRowCount(0)
         for row_number, row_data in enumerate(myresult):
             self.tableWidget.insertRow(row_number)
             for column_number, data in enumerate(row_data):
                 self.tableWidget.setItem(row_number, colum_number, QtWidgets.QTableWidgetItem(str(data)))
-"""
 
 #############################################################
 #StyleSheet
@@ -38,7 +36,6 @@ QPushButton {
     font-size: 25px;
     text-align: center;
 }
-
 QPushButton::hover {
     background-color: darkred;
     border: 2px solid darkred;
@@ -47,7 +44,6 @@ QPushButton::hover {
     color: white;
     font-size: 27px;
 }
-
 QPushButton::pressed {
     background-color: #201f1f;
     border: 2px solid darkred;
@@ -66,7 +62,6 @@ QTableWidget {
         text-align: center;
         border-collapse: collapse;
 }
-
 ::section {
     Background-color: green;
     color: white;
@@ -101,6 +96,9 @@ class UIWindow(object):
         header.setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
         header.setSectionsClickable(False)
+
+        header2 = self.tableWidget.verticalHeader()
+        header2.setSectionsClickable(False)
 
         mycursor = mydb.cursor()
         mycursor.execute("SELECT * FROM sensor_status ORDER BY ID DESC, Temperatur DESC, Luftfeuchtigkeit DESC, Datum DESC")
