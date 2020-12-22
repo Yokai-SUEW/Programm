@@ -1,27 +1,10 @@
 from PyQt5.QtSql import QSqlDatabase, QSqlQueryModel, QSqlQuery
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QApplication , QMainWindow , QPushButton , QWidget, QFrame, QHBoxLayout
-import mysql.connector
-from mysql.connector import Error
-
-#############################################################
-#MySQL - Connector
-
-mydb = mysql.connector.connect(
-    host="192.168.0.45",
-    user="halil",
-    passwd="root",
-    database="yokai",
-    )
+from PyQt5 import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+import mysql.connector as mc
 
 
-class Ui_MainWindow(object):
-    def loadData(self):
-        self.tableWidget.setRowCount(0)
-        for row_number, row_data in enumerate(myresult):
-            self.tableWidget.insertRow(row_number)
-            for column_number, data in enumerate(row_data):
-                self.tableWidget.setItem(row_number, colum_number, QtWidgets.QTableWidgetItem(str(data)))
 
 #############################################################
 #StyleSheet
@@ -43,6 +26,7 @@ QPushButton::hover {
     font-family: Arial;
     color: white;
     font-size: 27px;
+    padding-left: 2px;
 }
 QPushButton::pressed {
     background-color: #201f1f;
@@ -60,7 +44,6 @@ QTableWidget {
         font-family: bahnschrift;
         font-size: 20px;
         text-align: center;
-        border-collapse: collapse;
 }
 ::section {
     Background-color: green;
@@ -73,7 +56,6 @@ QTableWidget {
 
 ##############################################################
 #Bildschirm
-
 class UIWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setGeometry(600, 350, 800, 480)
@@ -89,6 +71,9 @@ class UIWindow(object):
         self.tableWidget.setGeometry(QtCore.QRect(30,95,740,291))
         self.tableWidget.setStyleSheet(StyleSheetTable)
         self.tableWidget.horizontalHeader().setStyleSheet(StyleSheetTable)
+        self.tableWidget.verticalHeader().setVisible(False)
+        self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
         header = self.tableWidget.horizontalHeader()
         header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
@@ -99,21 +84,6 @@ class UIWindow(object):
 
         header2 = self.tableWidget.verticalHeader()
         header2.setSectionsClickable(False)
-
-        mycursor = mydb.cursor()
-        mycursor.execute("SELECT * FROM sensor_status ORDER BY ID DESC, Temperatur DESC, Luftfeuchtigkeit DESC, Datum DESC")
-        myresult = mycursor.fetchall()
-        self.tableWidget.setRowCount(len(myresult))
-        self.tableWidget.setColumnCount(4)
-
-        row = 0
-        while True:
-            sqlRow = mycursor.fetchone()
-            if sqlRow == None:
-                break
-            for col in range(0, 8):
-                self.tableWidget.setItem(row, col, QtGui.QTableWidgetItem(sqlRow[col]))
-            row += 1
 
         self.label = QtWidgets.QLabel(MainWindow)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
@@ -134,12 +104,21 @@ class UIWindow(object):
         self.pushButtonE.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.pushButtonE.setGeometry(QtCore.QRect(375, 410, 50, 50))
         self.pushButtonE.setStyleSheet(StyleSheet)
+
+        self.label.setObjectName("LoadData")
+        self.pushButton = QtWidgets.QPushButton(MainWindow)
+        self.pushButton.setMouseTracking(False)
+        self.pushButton.setAutoFillBackground(False)
+        self.pushButton.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.pushButton.setGeometry(QtCore.QRect(30, 410, 225, 50))
+        self.pushButton.setStyleSheet(StyleSheet)
     
 #####################################################################
 #Funktionen
-
         def abbrechen():
             sys.exit()
+
+        self.pushButton.clicked.connect(self.select_data)
 
         self.pushButtonE.clicked.connect(abbrechen)
 
@@ -148,13 +127,37 @@ class UIWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow) 
 
+#####################################################################
+#Daten ablesen / Datenbank Verbindung
+
+    def select_data(self):
+        try:
+            mydb = mc.connect(
+ 
+                host="192.168.0.45",
+                user="halil",
+                password="root",
+                database="yokai"
+            )
+
+            mycursor = mydb.cursor()
+            mycursor.execute("SELECT * FROM sensor_status ORDER BY ID DESC ")
+            result = mycursor.fetchall()
+
+            self.tableWidget.setRowCount(0)
+            for row_number, row_data in enumerate(result):
+                self.tableWidget.insertRow(row_number)
+                for column_number, data in enumerate(row_data):
+                    self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+ 
+        except mc.Error as e:
+            print("Error")
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         self.label.setText(_translate("MainWindow", "YOKAI"))
         self.pushButtonE.setText(_translate("MainWindow", "X"))
-
-
-
+        self.pushButton.setText(_translate("MainWindow", "Daten anzeigen:"))
 
 if __name__ == "__main__":
     import sys
