@@ -20,18 +20,18 @@ QPushButton {
     text-align: center;
 }
 QPushButton::hover {
-    background-color: darkred;
-    border: 2px solid darkred;
+    background-color: lightgrey;
+    border: 2px solid lightgrey;
     border-radius: 12px;
     font-family: Arial;
-    color: white;
+    color: black;
     font-size: 27px;
     padding-left: 2px;
 }
 QPushButton::pressed {
     background-color: #201f1f;
     border: 2px solid darkred;
-    color: white;
+    color: black;
 }
 '''
 
@@ -46,13 +46,31 @@ QTableWidget {
         text-align: center;
 }
 ::section {
-    Background-color: green;
+    Background-color: grey;
     color: white;
     text-align: center;
     font-size: 15px;
     font-weight: bold;
 }
 '''
+StyleSheetT = """
+QTableWidget {
+        color: white;
+        background-color: #201f1f;
+        width: 70%;
+        height: 60%;
+        font-family: bahnschrift;
+        font-size: 20px;
+        text-align: center;
+}
+::section {
+    Background-color: darkred;
+    color: white;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+}
+"""
 
 ##############################################################
 #Bildschirm
