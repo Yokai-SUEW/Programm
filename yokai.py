@@ -123,7 +123,7 @@ class UIWindow(object):
         )
 
         self.labelC = QtWidgets.QLabel(MainWindow)
-        self.labelC.setGeometry(QtCore.QRect(465, 15, 300, 25))
+        self.labelC.setGeometry(QtCore.QRect(464, 18, 300, 25))
         self.labelC.setAlignment(QtCore.Qt.AlignRight)
         self.labelC.setStyleSheet(
             "font-family: bahnschrift;\n"
