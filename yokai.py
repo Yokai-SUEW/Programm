@@ -2,8 +2,8 @@ from PyQt5.QtSql import QSqlDatabase, QSqlQueryModel, QSqlQuery
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 import mysql.connector as mc
-
 
 
 #############################################################
@@ -11,27 +11,27 @@ import mysql.connector as mc
 
 StyleSheet = '''
 QPushButton {
-    background-color: grey;
-    border: 2px solid grey;
-    border-radius: 25px;
+    background-color: rgb(44, 44, 44);
+    border: 2px solid rgb(44, 44, 44);
+    border-radius: 12px;
     font-family: Arial;
     color: white;
     font-size: 25px;
     text-align: center;
 }
 QPushButton::hover {
-    background-color: lightgrey;
-    border: 2px solid lightgrey;
-    border-radius: 12px;
+    background-color: rgb(65, 65, 65);
+    border: 2px solid rgb(65, 65, 65);
+    border-radius: 10px;
     font-family: Arial;
-    color: black;
-    font-size: 27px;
+    color: white;
+    font-size: 25px;
     padding-left: 2px;
 }
 QPushButton::pressed {
     background-color: #201f1f;
     border: 2px solid darkred;
-    color: black;
+    color: white;
 }
 '''
 
@@ -46,11 +46,12 @@ QTableWidget {
         text-align: center;
 }
 ::section {
-    Background-color: grey;
+    Background-color: rgb(65, 65, 65);
     color: white;
     text-align: center;
     font-size: 15px;
     font-weight: bold;
+    padding-top: -4px;
 }
 '''
 StyleSheetT = """
@@ -79,7 +80,7 @@ class UIWindow(object):
         MainWindow.setGeometry(600, 350, 800, 480)
         MainWindow.setFixedSize(800, 480)
         MainWindow.setStyleSheet("background-color: #201f1f;")
-        MainWindow.setWindowTitle("Yokai-Serverüberwachung")
+        MainWindow.setWindowTitle("Yokai - Überwachung eines Serverschrankes")
         self.tableWidget = QTableWidget(MainWindow)
         self.tableWidget.setColumnCount(4)
         self.tableWidget.setHorizontalHeaderItem(0, QTableWidgetItem("ID"))
@@ -103,15 +104,32 @@ class UIWindow(object):
         header2 = self.tableWidget.verticalHeader()
         header2.setSectionsClickable(False)
 
+        self.labelTime = QtWidgets.QLabel(MainWindow)
+        self.labelTime.setGeometry(QtCore.QRect(465, 40, 300, 30))
+        self.labelTime.setAlignment(QtCore.Qt.AlignRight)
+        self.labelTime.setStyleSheet(
+            "font-family: bahnschrift;\n"
+            "font-size: 25px;\n"
+            "color: white;\n"
+        )
+
         self.label = QtWidgets.QLabel(MainWindow)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setGeometry(QtCore.QRect(10, 0, 780, 80))
+        self.label.setAlignment(QtCore.Qt.AlignLeft)
+        self.label.setGeometry(QtCore.QRect(30, 10, 350, 80))
         self.label.setStyleSheet(
         "font-family: bahnschrift;\n"
         "font-size: 60px;\n"
         "color: white;\n"
         )
 
+        self.labelC = QtWidgets.QLabel(MainWindow)
+        self.labelC.setGeometry(QtCore.QRect(465, 15, 300, 25))
+        self.labelC.setAlignment(QtCore.Qt.AlignRight)
+        self.labelC.setStyleSheet(
+            "font-family: bahnschrift;\n"
+            "font-size: 20px;\n"
+            "color: grey;\n"
+        )
 #####################################################################
 #Buttons
 
@@ -120,7 +138,7 @@ class UIWindow(object):
         self.pushButtonE.setMouseTracking(False)
         self.pushButtonE.setAutoFillBackground(False)
         self.pushButtonE.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.pushButtonE.setGeometry(QtCore.QRect(375, 410, 50, 50))
+        self.pushButtonE.setGeometry(QtCore.QRect(372, 410, 50, 50))
         self.pushButtonE.setStyleSheet(StyleSheet)
 
         self.label.setObjectName("LoadData")
@@ -128,7 +146,7 @@ class UIWindow(object):
         self.pushButton.setMouseTracking(False)
         self.pushButton.setAutoFillBackground(False)
         self.pushButton.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.pushButton.setGeometry(QtCore.QRect(30, 410, 225, 50))
+        self.pushButton.setGeometry(QtCore.QRect(28, 410, 225, 50))
         self.pushButton.setStyleSheet(StyleSheet)
     
 #####################################################################
@@ -143,7 +161,7 @@ class UIWindow(object):
         self.pushButtonE.setObjectName("pushButton")
 
         self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow) 
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
 #####################################################################
 #Daten ablesen / Datenbank Verbindung
@@ -168,14 +186,32 @@ class UIWindow(object):
                 for column_number, data in enumerate(row_data):
                     self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
  
+            if row_data > 30:
+                self.tableWidget.horizontalHeader().setStyleSheet(StyleSheetT)
+    
+            else: 
+                None
+
         except mc.Error as e:
             print("Error")
 
     def retranslateUi(self, MainWindow):
+        now = QDate.currentDate()
+        nowstr = now.toString(Qt.ISODate)
+        nowstr = now.toString(Qt.DefaultLocaleLongDate)
+
+        datetime = QDateTime.currentDateTime()
+        datetimestr = datetime.toString()
+
+        time = QTime.currentTime()
+        timestr = time.toString(Qt.DefaultLocaleLongDate)
+
         _translate = QtCore.QCoreApplication.translate
         self.label.setText(_translate("MainWindow", "YOKAI"))
         self.pushButtonE.setText(_translate("MainWindow", "X"))
         self.pushButton.setText(_translate("MainWindow", "Daten anzeigen:"))
+        self.labelTime.setText(_translate("MainWindow", datetimestr))
+        self.labelC.setText(_translate("MainWindow", "©Made by Celil TAN"))
 
 if __name__ == "__main__":
     import sys
