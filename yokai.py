@@ -77,6 +77,9 @@ QTableWidget {
 #Bildschirm
 class UIWindow(object):
     def setupUi(self, MainWindow):
+        timer = QTimer(MainWindow)
+        timer.timeout.connect(self.showTime)
+        timer.start(1000)   
         MainWindow.setGeometry(600, 350, 800, 480)
         MainWindow.setFixedSize(800, 480)
         MainWindow.setStyleSheet("background-color: #201f1f;")
@@ -105,17 +108,26 @@ class UIWindow(object):
         header2.setSectionsClickable(False)
 
         self.labelTime = QtWidgets.QLabel(MainWindow)
-        self.labelTime.setGeometry(QtCore.QRect(465, 40, 300, 30))
+        self.labelTime.setGeometry(QtCore.QRect(465, 43, 300, 30))
         self.labelTime.setAlignment(QtCore.Qt.AlignRight)
         self.labelTime.setStyleSheet(
-            "font-family: bahnschrift;\n"
+            "font-family: Arial;\n"
             "font-size: 25px;\n"
             "color: white;\n"
         )
 
+        self.labelDate = QtWidgets.QLabel(MainWindow)
+        self.labelDate.setGeometry(QtCore.QRect(358, 43, 300, 30))
+        self.labelDate.setAlignment(QtCore.Qt.AlignRight)
+        self.labelDate.setStyleSheet(
+            "font-family: Arial;\n"
+            "font-size: 25px;\n"
+            "color: grey;\n"
+        )
+
         self.label = QtWidgets.QLabel(MainWindow)
         self.label.setAlignment(QtCore.Qt.AlignLeft)
-        self.label.setGeometry(QtCore.QRect(30, 10, 350, 80))
+        self.label.setGeometry(QtCore.QRect(31, 10, 350, 80))
         self.label.setStyleSheet(
         "font-family: bahnschrift;\n"
         "font-size: 60px;\n"
@@ -195,23 +207,25 @@ class UIWindow(object):
         except mc.Error as e:
             print("Error")
 
+##############################################################################
+#Datum & Uhrzeit
+
     def retranslateUi(self, MainWindow):
-        now = QDate.currentDate()
-        nowstr = now.toString(Qt.ISODate)
-        nowstr = now.toString(Qt.DefaultLocaleLongDate)
-
-        datetime = QDateTime.currentDateTime()
-        datetimestr = datetime.toString()
-
-        time = QTime.currentTime()
-        timestr = time.toString(Qt.DefaultLocaleLongDate)
+        date = QDate.currentDate()
+        datestr = date.toString()
 
         _translate = QtCore.QCoreApplication.translate
         self.label.setText(_translate("MainWindow", "YOKAI"))
         self.pushButtonE.setText(_translate("MainWindow", "X"))
         self.pushButton.setText(_translate("MainWindow", "Daten anzeigen:"))
-        self.labelTime.setText(_translate("MainWindow", datetimestr))
         self.labelC.setText(_translate("MainWindow", "©Made by Celil TAN"))
+        self.labelDate.setText(_translate("MainWindow", datestr + " /"))
+
+    def showTime(self):
+
+        current_time = QTime.currentTime()
+        label_time = current_time.toString("hh:mm:ss")
+        self.labelTime.setText(label_time)
 
 if __name__ == "__main__":
     import sys
