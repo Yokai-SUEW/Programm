@@ -21,7 +21,7 @@ QPushButton {
 }
 QPushButton::hover {
     background-color: rgb(65, 65, 65);
-    border: 2px solid rgb(65, 65, 65);
+    border: 2px solid white;
     border-radius: 10px;
     font-family: Arial;
     color: white;
@@ -79,7 +79,7 @@ class UIWindow(object):
     def setupUi(self, MainWindow):
         timer = QTimer(MainWindow)
         timer.timeout.connect(self.showTime)
-        timer.start(1000)   
+        timer.start(1000)
         MainWindow.setGeometry(600, 350, 800, 480)
         MainWindow.setFixedSize(800, 480)
         MainWindow.setStyleSheet("background-color: #201f1f;")
@@ -117,7 +117,7 @@ class UIWindow(object):
         )
 
         self.labelDate = QtWidgets.QLabel(MainWindow)
-        self.labelDate.setGeometry(QtCore.QRect(358, 43, 300, 30))
+        self.labelDate.setGeometry(QtCore.QRect(358, 44, 300, 30))
         self.labelDate.setAlignment(QtCore.Qt.AlignRight)
         self.labelDate.setStyleSheet(
             "font-family: Arial;\n"
