@@ -34,7 +34,31 @@ QPushButton::pressed {
     color: white;
 }
 '''
-
+StyleSheetE = '''
+QPushButton {
+    background-color: rgb(44, 44, 44);
+    border: 2px solid rgb(44, 44, 44);
+    border-radius: 12px;
+    font-family: Arial;
+    color: white;
+    font-size: 25px;
+    text-align: center;
+}
+QPushButton::hover {
+    background-color: darkred;
+    border: 2px solid white;
+    border-radius: 10px;
+    font-family: Arial;
+    color: white;
+    font-size: 25px;
+    padding-left: 2px;
+}
+QPushButton::pressed {
+    background-color: #201f1f;
+    border: 2px solid darkred;
+    color: white;
+}
+'''
 StyleSheetTable = '''
 QTableWidget {
         color: white;
@@ -108,7 +132,7 @@ class UIWindow(object):
         header2.setSectionsClickable(False)
 
         self.labelTime = QtWidgets.QLabel(MainWindow)
-        self.labelTime.setGeometry(QtCore.QRect(465, 43, 300, 30))
+        self.labelTime.setGeometry(QtCore.QRect(465, 44, 300, 30))
         self.labelTime.setAlignment(QtCore.Qt.AlignRight)
         self.labelTime.setStyleSheet(
             "font-family: Arial;\n"
@@ -129,9 +153,9 @@ class UIWindow(object):
         self.label.setAlignment(QtCore.Qt.AlignLeft)
         self.label.setGeometry(QtCore.QRect(31, 10, 350, 80))
         self.label.setStyleSheet(
-        "font-family: bahnschrift;\n"
-        "font-size: 60px;\n"
-        "color: white;\n"
+            "font-family: bahnschrift;\n"
+            "font-size: 60px;\n"
+            "color: white;\n"
         )
 
         self.labelC = QtWidgets.QLabel(MainWindow)
@@ -151,7 +175,7 @@ class UIWindow(object):
         self.pushButtonE.setAutoFillBackground(False)
         self.pushButtonE.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.pushButtonE.setGeometry(QtCore.QRect(372, 410, 50, 50))
-        self.pushButtonE.setStyleSheet(StyleSheet)
+        self.pushButtonE.setStyleSheet(StyleSheetE)
 
         self.label.setObjectName("LoadData")
         self.pushButton = QtWidgets.QPushButton(MainWindow)
