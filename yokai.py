@@ -215,12 +215,14 @@ class UIWindow(object):
             mycursor = mydb.cursor()
             mycursor.execute("SELECT * FROM sensor_status ORDER BY ID DESC ")
             result = mycursor.fetchall()
+            i = 0
 
             self.tableWidget.setRowCount(0)
             for row_number, row_data in enumerate(result):
                 self.tableWidget.insertRow(row_number)
                 for column_number, data in enumerate(row_data):
                     self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+                    i += 1
  
             if row_data > 30:
                 self.tableWidget.horizontalHeader().setStyleSheet(StyleSheetT)
@@ -228,8 +230,18 @@ class UIWindow(object):
             else: 
                 None
 
+            if i != i:
+                self.tableWidget.setRowCount(0)
+                for row_number, row_data in enumerate(result):
+                    self.tableWidget.insertRow(row_number)
+                    for column_number, data in enumerate(row_data):
+                        self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+            else:
+                None
+
         except mc.Error as e:
-            print("Error")
+            print("Es konnte keine Verbindung zur Datenbank hergestellt werden!")
+            print("Bitte versuchen Sie es später noch einmal.")
 
 ##############################################################################
 #Datum & Uhrzeit
@@ -244,6 +256,19 @@ class UIWindow(object):
         self.pushButton.setText(_translate("MainWindow", "Daten anzeigen:"))
         self.labelC.setText(_translate("MainWindow", "©Made by Celil TAN"))
         self.labelDate.setText(_translate("MainWindow", datestr + " /"))
+
+    """
+    def refresh(self):
+
+        d = self.scrollAreaWidgetContents.children()
+        e = reversed(d)
+
+        for g in e:
+            g.deleteLater()
+
+        self.scrollAreaWidgetContents.deleteLater()
+        self.setupDynamics()
+    """
 
     def showTime(self):
 
