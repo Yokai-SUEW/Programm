@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from PyQt5.QtSql import QSqlDatabase, QSqlQueryModel, QSqlQuery
 from PyQt5 import *
 from PyQt5.QtWidgets import *
@@ -70,7 +71,7 @@ QTableWidget {
         text-align: center;
 }
 ::section {
-    Background-color: rgb(65, 65, 65);
+    background-color: rgb(65, 65, 65);
     color: white;
     text-align: center;
     font-size: 15px;
@@ -89,21 +90,23 @@ QTableWidget {
         text-align: center;
 }
 ::section {
-    Background-color: darkred;
+    background-color: #720000;
     color: white;
     text-align: center;
     font-size: 15px;
     font-weight: bold;
+    padding-top: -4px;
 }
 """
 
 ##############################################################
 #Bildschirm
-class UIWindow(object):
+
+class UIWindow(QMainWindow):
     def setupUi(self, MainWindow):
         timer = QTimer(MainWindow)
         timer.timeout.connect(self.showTime)
-        timer.start(1000)
+        timer.start(30)
         MainWindow.setGeometry(600, 350, 800, 480)
         MainWindow.setFixedSize(800, 480)
         MainWindow.setStyleSheet("background-color: #201f1f;")
@@ -119,6 +122,7 @@ class UIWindow(object):
         self.tableWidget.horizontalHeader().setStyleSheet(StyleSheetTable)
         self.tableWidget.verticalHeader().setVisible(False)
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.tableWidget.setAutoFillBackground(True)
 
         header = self.tableWidget.horizontalHeader()
         header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
@@ -158,10 +162,10 @@ class UIWindow(object):
             "color: white;\n"
         )
 
-        self.labelC = QtWidgets.QLabel(MainWindow)
-        self.labelC.setGeometry(QtCore.QRect(464, 18, 300, 25))
-        self.labelC.setAlignment(QtCore.Qt.AlignRight)
-        self.labelC.setStyleSheet(
+        self.labelV = QtWidgets.QLabel(MainWindow)
+        self.labelV.setGeometry(QtCore.QRect(464, 18, 300, 25))
+        self.labelV.setAlignment(QtCore.Qt.AlignRight)
+        self.labelV.setStyleSheet(
             "font-family: bahnschrift;\n"
             "font-size: 20px;\n"
             "color: grey;\n"
@@ -176,21 +180,12 @@ class UIWindow(object):
         self.pushButtonE.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.pushButtonE.setGeometry(QtCore.QRect(372, 410, 50, 50))
         self.pushButtonE.setStyleSheet(StyleSheetE)
-
-        self.label.setObjectName("LoadData")
-        self.pushButton = QtWidgets.QPushButton(MainWindow)
-        self.pushButton.setMouseTracking(False)
-        self.pushButton.setAutoFillBackground(False)
-        self.pushButton.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.pushButton.setGeometry(QtCore.QRect(28, 410, 225, 50))
-        self.pushButton.setStyleSheet(StyleSheet)
     
 #####################################################################
 #Funktionen
         def abbrechen():
             sys.exit()
 
-        self.pushButton.clicked.connect(self.select_data)
 
         self.pushButtonE.clicked.connect(abbrechen)
 
@@ -202,10 +197,8 @@ class UIWindow(object):
 #####################################################################
 #Daten ablesen / Datenbank Verbindung
 
-    def select_data(self):
         try:
             mydb = mc.connect(
- 
                 host="192.168.0.45",
                 user="halil",
                 password="root",
@@ -213,32 +206,23 @@ class UIWindow(object):
             )
 
             mycursor = mydb.cursor()
-            mycursor.execute("SELECT * FROM sensor_status ORDER BY ID DESC ")
+            mycursor.execute("SELECT id, Temperatur, Luftfeuchtigkeit, datum FROM sensor_status ORDER BY ID DESC")
             result = mycursor.fetchall()
-            i = 0
 
             self.tableWidget.setRowCount(0)
             for row_number, row_data in enumerate(result):
                 self.tableWidget.insertRow(row_number)
                 for column_number, data in enumerate(row_data):
-                    self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
-                    i += 1
- 
-            if row_data > 30:
-                self.tableWidget.horizontalHeader().setStyleSheet(StyleSheetT)
-    
-            else: 
-                None
+                    item = QTableWidgetItem(str(data))
+                    item.setTextAlignment(QtCore.Qt.AlignHCenter)
+                    self.tableWidget.setItem(row_number, column_number, item)
+            
+            if int(row_data[1]) >= 50:
+                    self.tableWidget.horizontalHeader().setStyleSheet(StyleSheetT)
 
-            if i != i:
-                self.tableWidget.setRowCount(0)
-                for row_number, row_data in enumerate(result):
-                    self.tableWidget.insertRow(row_number)
-                    for column_number, data in enumerate(row_data):
-                        self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
             else:
                 None
-
+            
         except mc.Error as e:
             print("Es konnte keine Verbindung zur Datenbank hergestellt werden!")
             print("Bitte versuchen Sie es später noch einmal.")
@@ -253,28 +237,15 @@ class UIWindow(object):
         _translate = QtCore.QCoreApplication.translate
         self.label.setText(_translate("MainWindow", "YOKAI"))
         self.pushButtonE.setText(_translate("MainWindow", "X"))
-        self.pushButton.setText(_translate("MainWindow", "Daten anzeigen:"))
-        self.labelC.setText(_translate("MainWindow", "©Made by Celil TAN"))
+        self.labelV.setText(_translate("MainWindow", "version 1.1"))
         self.labelDate.setText(_translate("MainWindow", datestr + " /"))
 
-    """
-    def refresh(self):
-
-        d = self.scrollAreaWidgetContents.children()
-        e = reversed(d)
-
-        for g in e:
-            g.deleteLater()
-
-        self.scrollAreaWidgetContents.deleteLater()
-        self.setupDynamics()
-    """
 
     def showTime(self):
-
         current_time = QTime.currentTime()
         label_time = current_time.toString("hh:mm:ss")
         self.labelTime.setText(label_time)
+
 
 if __name__ == "__main__":
     import sys
