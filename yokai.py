@@ -79,24 +79,27 @@ QTableWidget {
     padding-top: -4px;
 }
 '''
-StyleSheetT = """
-QTableWidget {
-        color: white;
-        background-color: #201f1f;
-        width: 70%;
-        height: 60%;
-        font-family: bahnschrift;
-        font-size: 20px;
-        text-align: center;
-}
-::section {
-    background-color: #720000;
+StyleSheetMeldung = """
     color: white;
-    text-align: center;
-    font-size: 15px;
-    font-weight: bold;
-    padding-top: -4px;
-}
+    background-color: #201f1f;
+    font-size: 17px;
+    text-align: right;
+    font-family: bahnschrift;
+    padding-right: 2px;
+    padding-top: 3px;
+    padding-left: 2px;
+    padding-bottom: 2px;
+"""
+StyleSheetMeldung2 = """
+    color: white;
+    background-color: rgb(44, 44, 44);
+    font-size: 17px;
+    text-align: right;
+    font-family: bahnschrift;
+    padding-right: 2px;
+    padding-top: 3px;
+    padding-left: 2px;
+    padding-bottom: 2px;
 """
 
 ##############################################################
@@ -105,8 +108,11 @@ QTableWidget {
 class UIWindow(QMainWindow):
     def setupUi(self, MainWindow):
         timer = QTimer(MainWindow)
+        timer2 = QTimer(MainWindow)
         timer.timeout.connect(self.showTime)
         timer.start(30)
+        timer2.timeout.connect(self.select_data)
+        timer2.start(5000)
         MainWindow.setGeometry(600, 350, 800, 480)
         MainWindow.setFixedSize(800, 480)
         MainWindow.setStyleSheet("background-color: #201f1f;")
@@ -123,6 +129,7 @@ class UIWindow(QMainWindow):
         self.tableWidget.verticalHeader().setVisible(False)
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.tableWidget.setAutoFillBackground(True)
+        self.tableWidget.setSelectionBehavior(False)
 
         header = self.tableWidget.horizontalHeader()
         header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
@@ -170,6 +177,11 @@ class UIWindow(QMainWindow):
             "font-size: 20px;\n"
             "color: grey;\n"
         )
+
+        self.labelMeldung = QtWidgets.QLabel(MainWindow)
+        self.labelMeldung.setAlignment(QtCore.Qt.AlignLeft)
+        self.labelMeldung.setGeometry(QtCore.QRect(520, 398, 250, 70))
+        self.labelMeldung.setStyleSheet(StyleSheetMeldung)
 #####################################################################
 #Buttons
 
@@ -197,6 +209,7 @@ class UIWindow(QMainWindow):
 #####################################################################
 #Daten ablesen / Datenbank Verbindung
 
+    def select_data(self):
         try:
             mydb = mc.connect(
                 host="192.168.0.45",
@@ -206,7 +219,7 @@ class UIWindow(QMainWindow):
             )
 
             mycursor = mydb.cursor()
-            mycursor.execute("SELECT id, Temperatur, Luftfeuchtigkeit, datum FROM sensor_status ORDER BY ID DESC")
+            mycursor.execute("SELECT id, Temperatur, Luftfeuchtigkeit, datum, active FROM sensor_status ORDER BY ID DESC")
             result = mycursor.fetchall()
 
             self.tableWidget.setRowCount(0)
@@ -215,14 +228,8 @@ class UIWindow(QMainWindow):
                 for column_number, data in enumerate(row_data):
                     item = QTableWidgetItem(str(data))
                     item.setTextAlignment(QtCore.Qt.AlignHCenter)
-                    self.tableWidget.setItem(row_number, column_number, item)
-            
-            if int(row_data[1]) >= 50:
-                    self.tableWidget.horizontalHeader().setStyleSheet(StyleSheetT)
+                    self.tableWidget.setItem(row_number, column_number, item)     
 
-            else:
-                None
-            
         except mc.Error as e:
             print("Es konnte keine Verbindung zur Datenbank hergestellt werden!")
             print("Bitte versuchen Sie es später noch einmal.")
@@ -239,6 +246,7 @@ class UIWindow(QMainWindow):
         self.pushButtonE.setText(_translate("MainWindow", "X"))
         self.labelV.setText(_translate("MainWindow", "version 1.1"))
         self.labelDate.setText(_translate("MainWindow", datestr + " /"))
+        
 
 
     def showTime(self):
