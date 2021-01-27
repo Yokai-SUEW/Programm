@@ -212,7 +212,7 @@ class UIWindow(QMainWindow):
     def select_data(self):
         try:
             mydb = mc.connect(
-                host="192.168.0.45",
+                host="0.tcp.ngrok.io:15259",
                 user="halil",
                 password="root",
                 database="yokai"
@@ -228,10 +228,22 @@ class UIWindow(QMainWindow):
                 for column_number, data in enumerate(row_data):
                     item = QTableWidgetItem(str(data))
                     item.setTextAlignment(QtCore.Qt.AlignHCenter)
-                    self.tableWidget.setItem(row_number, column_number, item)     
+                    self.tableWidget.setItem(row_number, column_number, item)   
+
+                    a = bool(row_data[4])
+
+                    if a:
+                        self.labelMeldung.clear()
+                        self.labelMeldung.setText("ID: " + str(row_data[0]) + "<br>" + "Temperatur: " + str(row_data[1]) + "<br>" + "Datum: " + str(row_data[3]))
+                        self.labelMeldung.setStyleSheet(StyleSheetMeldung)
+                    else:
+                        self.labelMeldung.clear()
+                        self.labelMeldung.setText("Es gibt keine Meldungen!")
+                        self.labelMeldung.setStyleSheet(StyleSheetMeldung2)
+
 
         except mc.Error as e:
-            print("Es konnte keine Verbindung zur Datenbank hergestellt werden!")
+            print("Es konnte keine Verbindung mit der Datenbank hergestellt werden!")
             print("Bitte versuchen Sie es später noch einmal.")
 
 ##############################################################################
