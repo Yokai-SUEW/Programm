@@ -10,31 +10,6 @@ import mysql.connector as mc
 #############################################################
 #StyleSheet
 
-StyleSheet = '''
-QPushButton {
-    background-color: rgb(44, 44, 44);
-    border: 2px solid rgb(44, 44, 44);
-    border-radius: 12px;
-    font-family: Arial;
-    color: white;
-    font-size: 25px;
-    text-align: center;
-}
-QPushButton::hover {
-    background-color: rgb(65, 65, 65);
-    border: 2px solid white;
-    border-radius: 10px;
-    font-family: Arial;
-    color: white;
-    font-size: 25px;
-    padding-left: 2px;
-}
-QPushButton::pressed {
-    background-color: #201f1f;
-    border: 2px solid darkred;
-    color: white;
-}
-'''
 StyleSheetE = '''
 QPushButton {
     background-color: rgb(44, 44, 44);
@@ -47,7 +22,7 @@ QPushButton {
 }
 QPushButton::hover {
     background-color: darkred;
-    border: 2px solid white;
+    border: 2px solid darkred;
     border-radius: 10px;
     font-family: Arial;
     color: white;
@@ -79,29 +54,25 @@ QTableWidget {
     padding-top: -4px;
 }
 '''
-StyleSheetMeldung = """
+StyleSheetTableM = '''
+QTableWidget {
+        color: white;
+        background-color: #201f1f;
+        width: 40%;
+        height: 30%;
+        font-family: bahnschrift;
+        font-size: 15px;
+        text-align: center;
+}
+::section {
+    background-color: rgb(50, 0, 0);
     color: white;
-    background-color: #201f1f;
-    font-size: 17px;
-    text-align: right;
-    font-family: bahnschrift;
-    padding-right: 2px;
-    padding-top: 3px;
-    padding-left: 2px;
-    padding-bottom: 2px;
-"""
-StyleSheetMeldung2 = """
-    color: white;
-    background-color: rgb(44, 44, 44);
-    font-size: 17px;
-    text-align: right;
-    font-family: bahnschrift;
-    padding-right: 2px;
-    padding-top: 3px;
-    padding-left: 2px;
-    padding-bottom: 2px;
-"""
-
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    padding-top: -4px;
+}
+'''
 ##############################################################
 #Bildschirm
 
@@ -112,7 +83,7 @@ class UIWindow(QMainWindow):
         timer.timeout.connect(self.showTime)
         timer.start(30)
         timer2.timeout.connect(self.select_data)
-        timer2.start(5000)
+        timer2.start(10000)
         MainWindow.setGeometry(600, 350, 800, 480)
         MainWindow.setFixedSize(800, 480)
         MainWindow.setStyleSheet("background-color: #201f1f;")
@@ -178,10 +149,27 @@ class UIWindow(QMainWindow):
             "color: grey;\n"
         )
 
-        self.labelMeldung = QtWidgets.QLabel(MainWindow)
-        self.labelMeldung.setAlignment(QtCore.Qt.AlignLeft)
-        self.labelMeldung.setGeometry(QtCore.QRect(520, 398, 250, 70))
-        self.labelMeldung.setStyleSheet(StyleSheetMeldung)
+        self.tableWidgetM = QTableWidget(MainWindow)
+        self.tableWidgetM.setColumnCount(3)
+        self.tableWidgetM.setGeometry(QtCore.QRect(470, 398, 300, 70))
+        self.tableWidgetM.setStyleSheet(StyleSheetTableM)
+        self.tableWidgetM.horizontalHeader().setStyleSheet(StyleSheetTableM)
+        self.tableWidgetM.verticalHeader().setVisible(False)
+        self.tableWidgetM.horizontalHeader().setVisible(True)
+        self.tableWidgetM.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.tableWidgetM.setAutoFillBackground(True)
+        self.tableWidgetM.setSelectionBehavior(False)
+        self.tableWidgetM.setHorizontalHeaderItem(0, QTableWidgetItem("ID"))
+        self.tableWidgetM.setHorizontalHeaderItem(1, QTableWidgetItem("Temperatur"))
+        self.tableWidgetM.setHorizontalHeaderItem(2, QTableWidgetItem("Datum & Uhrzeit"))
+
+        headerM = self.tableWidgetM.horizontalHeader()
+        headerM.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        headerM.setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
+        headerM.setSectionsClickable(False)
+
+        header2M = self.tableWidgetM.verticalHeader()
+        header2M.setSectionsClickable(False)
 #####################################################################
 #Buttons
 
@@ -227,8 +215,20 @@ class UIWindow(QMainWindow):
                 self.tableWidget.insertRow(row_number)
                 for column_number, data in enumerate(row_data):
                     item = QTableWidgetItem(str(data))
-                    item.setTextAlignment(QtCore.Qt.AlignHCenter)
-                    self.tableWidget.setItem(row_number, column_number, item)     
+                    item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+                    self.tableWidget.setItem(row_number, column_number, item)
+
+            active = mydb.cursor()
+            active.execute("SELECT id, Temperatur, datum FROM sensor_status WHERE active = 1; ")
+            ergebnis = active.fetchall()
+
+            self.tableWidgetM.setRowCount(0)
+            for row_numberM, row_dataM in enumerate(ergebnis):
+                self.tableWidgetM.insertRow(row_numberM)
+                for column_numberM, dataM in enumerate(row_dataM):
+                    itemM = QTableWidgetItem(str(dataM))
+                    itemM.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+                    self.tableWidgetM.setItem(row_numberM, column_numberM, itemM)
 
         except mc.Error as e:
             print("Es konnte keine Verbindung zur Datenbank hergestellt werden!")
@@ -244,7 +244,7 @@ class UIWindow(QMainWindow):
         _translate = QtCore.QCoreApplication.translate
         self.label.setText(_translate("MainWindow", "YOKAI"))
         self.pushButtonE.setText(_translate("MainWindow", "X"))
-        self.labelV.setText(_translate("MainWindow", "version 1.1"))
+        self.labelV.setText(_translate("MainWindow", "version 1.2"))
         self.labelDate.setText(_translate("MainWindow", datestr + " /"))
         
 
