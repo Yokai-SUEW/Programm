@@ -6,7 +6,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import mysql.connector as mc
 
-
 #############################################################
 #StyleSheet
 
@@ -247,7 +246,6 @@ class UIWindow(QMainWindow):
         self.labelV.setText(_translate("MainWindow", "version 1.2"))
         self.labelDate.setText(_translate("MainWindow", datestr + " /"))
         
-
 
     def showTime(self):
         current_time = QTime.currentTime()
